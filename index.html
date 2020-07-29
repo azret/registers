@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .chart {
+            width: 32em;
+            border: 1px solid #aaa;
+        }
+
+        .chart td:first-child {
+            text-align: left;
+        }
+
+        .chart {
+            border-spacing: 2px;
+            border-collapse: collapse;
+        }
+
+        .chart td {
+            padding: 6px;
+        }
+    </style>
+    <script>
+        let parts = [
+            {
+                value: 10000,
+                bands: ["brown", "black", "black", "red", "brown"]
+            },
+            {
+                value: 470,
+                bands: ["yellow", "violet", "black", "black", "brown"]
+            },
+            {
+                value: 3900,
+                bands: ["orange", "white", "black", "brown", "brown"]
+            },
+            {
+                value: 1000,
+                bands: ["brown", "black", "black", "brown", "brown"]
+            },
+            {
+                value: 100,
+                bands: ["brown", "black", "black", "black", "brown"]
+            },
+            {
+                value: 68,
+                bands: ["blue", "gray", "black", "gold", "brown"]
+            },
+            {
+                value: 680,
+                bands: ["blue", "gray", "black", "black", "brown"]
+            },
+            {
+                value: 470,
+                bands: ["yellow", "violet", "black", "black", "brown"]
+            }
+        ];
+    </script>
+</head>
+
+<body>
+    <table border="0" class="chart" style="float: right;">
+        <tbody>
+            <tr style="background: white; color: black;">
+                <td>Color</td>
+                <td>1<sup>st</sup></td>
+                <td>2<sup>nd</sup></td>
+                <td>3<sup>rd</sup></td>
+                <td>Multiplier</td>
+                <td>Tolerance</td>
+            </tr>
+            <tr style="background: black; color: white;">
+                <td>Black</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>1Ω</td>
+                <td></td>
+            </tr>
+            <tr style="background: rgb(153, 117, 82);">
+                <td>Brown</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>10Ω</td>
+                <td>±1%</td>
+            </tr>
+            <tr style="background: rgb(255, 57, 57);">
+                <td>Red</td>
+                <td>2</td>
+                <td>2</td>
+                <td>2</td>
+                <td>100Ω</td>
+                <td>±2%</td>
+            </tr>
+            <tr style="background: rgb(255, 165, 74);">
+                <td>Orange</td>
+                <td>3</td>
+                <td>3</td>
+                <td>3</td>
+                <td>1KΩ</td>
+                <td></td>
+            </tr>
+            <tr style="background: rgb(255, 255, 122);">
+                <td>Yellow</td>
+                <td>4</td>
+                <td>4</td>
+                <td>4</td>
+                <td>10KΩ</td>
+                <td></td>
+            </tr>
+            <tr style="background: rgb(137, 255, 137);">
+                <td>Green</td>
+                <td>5</td>
+                <td>5</td>
+                <td>5</td>
+                <td>100KΩ</td>
+                <td>±0.5%</td>
+            </tr>
+            <tr style="background: rgb(72, 136, 242);">
+                <td>Blue</td>
+                <td>6</td>
+                <td>6</td>
+                <td>6</td>
+                <td>1MΩ</td>
+                <td>±0.25%</td>
+            </tr>
+            <tr style="background: rgb(240, 144, 246);">
+                <td>Violet</td>
+                <td>7</td>
+                <td>7</td>
+                <td>7</td>
+                <td>10MΩ</td>
+                <td>±0.1%</td>
+            </tr>
+            <tr style="background: rgb(128, 128, 128);">
+                <td>Gray</td>
+                <td>8</td>
+                <td>8</td>
+                <td>8</td>
+                <td></td>
+                <td>±0.05%</td>
+            </tr>
+            <tr style="background: rgb(255, 255, 255);">
+                <td>White</td>
+                <td>9</td>
+                <td>9</td>
+                <td>9</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr style="background: rgb(205, 153, 51);">
+                <td>Gold</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>0.1Ω</td>
+                <td>±5%</td>
+            </tr>
+            <tr style="background: rgb(204, 204, 204);">
+                <td>Silver</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>0.01Ω</td>
+                <td>±10%</td>
+            </tr>
+        </tbody>
+    </table>
+    <div id="inventory"></div>
+    <script>
+        function createRegisterColorCell(cell, colors) {
+            function mapColor(color) {
+                switch (color.toLowerCase()) {
+                    case "brown":
+                        return "rgb(153, 117, 82)";
+                    case "gold":
+                        return "rgb(205, 153, 51)";
+                    case "orange":
+                        return "rgb(255, 165, 74)";
+                    case "red":
+                        return "rgb(255, 57, 57)";            
+                    case "yellow":
+                        return "rgb(255, 255, 122)";                                         
+                    default:
+                        return color;
+                }
+            }
+
+            let table = document.createElement("table");
+            table.style.backgroundColor = "rgb(192, 232, 255)";
+            table.style.border = "1px solid #999";
+            let row = table.insertRow();
+            let firstBand = row.insertCell();
+            let firstBandColorElem = document.createElement("div");
+            firstBandColorElem.style.width = "6px";
+            firstBandColorElem.style.height = "16px";
+            firstBandColorElem.style.backgroundColor = mapColor(colors[0]);
+            firstBand.appendChild(firstBandColorElem);
+            let secondBand = row.insertCell();
+            let secondBandColorElem = document.createElement("div");
+            secondBandColorElem.style.width = "6px";
+            secondBandColorElem.style.height = "16px";
+            secondBandColorElem.style.backgroundColor = mapColor(colors[1]);
+            secondBand.appendChild(secondBandColorElem);
+            let thirdBand = row.insertCell();
+            let thirdBandColorElem = document.createElement("div");
+            thirdBandColorElem.style.width = "6px";
+            thirdBandColorElem.style.height = "16px";
+            thirdBandColorElem.style.backgroundColor = mapColor(colors[2]);
+            thirdBand.appendChild(thirdBandColorElem);  
+            let fourthBand = row.insertCell();
+            let fourthBandColorElem = document.createElement("div");
+            fourthBandColorElem.style.width = "6px";
+            fourthBandColorElem.style.height = "16px";
+            fourthBandColorElem.style.backgroundColor = mapColor(colors[3]);
+            fourthBand.appendChild(fourthBandColorElem);
+            let spaceBand = row.insertCell();
+            let spaceBandElem = document.createElement("div");
+            spaceBandElem.style.width = "10px";
+            spaceBandElem.style.height = "16px";
+            spaceBand.appendChild(spaceBandElem);                                 
+            let fifthBand = row.insertCell();
+            let fifthBandColorElem = document.createElement("div");
+            fifthBandColorElem.style.width = "6px";
+            fifthBandColorElem.style.height = "16px";
+            fifthBandColorElem.style.backgroundColor = mapColor(colors[4]);
+            fifthBand.appendChild(fifthBandColorElem);                              
+            cell.appendChild(table); 
+        }
+
+        let inventory = document.querySelector("#inventory");
+        let table = document.createElement("table");
+        inventory.appendChild(table);
+
+        function createRegister(part) {
+            let row = table.insertRow();
+            let valueCell = row.insertCell();
+            let text = document.createTextNode(part.label || part.value);
+            valueCell.appendChild(text);
+            let spaceCell = row.insertCell();
+            spaceCell.style.width = "1em";
+            createRegisterColorCell(row.insertCell(), part.bands);
+        }
+
+        for (var i = 0; i < parts.length; i++) {
+            createRegister(parts[i]);
+        }
+
+    </script>
+</body>
+
+</html>
